@@ -1,7 +1,7 @@
 # GRS
 ## Google Search Serping Tool
 
-![image](https://github.com/user-attachments/assets/2be1ed81-c421-4a10-ba99-d277f193fafd)
+![image](https://github.com/Trabbit0ne/grs/blob/main/grs.gif?raw=true)
 
 ## Usage
 grs --query/-q 'query' --page/-p PAGE <search>
