@@ -5,4 +5,5 @@
 
 ## Usage
 grs --query/-q 'query' --page/-p PAGE <search>
+
 grs --help/-h <Display help message>
