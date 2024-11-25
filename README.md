@@ -5,7 +5,7 @@
 
 # Installation
 ```
-git clone https://github.com/Trabbit0ne/grs.git && cd grs && chmod +x main.py && echo 'alias grs="python3 ~/grs/main.py"' >> ~/.bashrc && source ~/.bashrc && grs
+git clone https://github.com/Trabbit0ne/grs.git && cd grs && chmod +x grs.py && echo 'alias grs="python3 ~/grs/grs.py"' >> ~/.bashrc && source ~/.bashrc && grs
 ```
 
 ## Usage
