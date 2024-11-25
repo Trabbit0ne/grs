@@ -4,7 +4,24 @@ import urllib.parse
 import argparse
 import os
 
-os.system("clear")
+# COLORS
+R = "\033[31m"
+G = "\033[32m"
+Y = "\033[33m"
+B = "\033[34m"
+P = "\033[35m"
+C = "\033[35m"
+W = "\033[37m"
+BGR = "\033[41m"
+BGG = "\033[42m"
+BGY = "\033[43m"
+BGB = "\033[44m"
+BGP = "\033[45m"
+BGC = "\033[46m"
+NE = "\033[0m"
+
+def clear():
+    os.system("clear")
 
 def fetch_results(query, page_number=1):
     # Encode the query
@@ -55,28 +72,54 @@ def display_results(results):
         print(f"   Link: {link}")
         print('-----------------------------------------------------------------------------')
 
+def parse_pages(pages_str):
+    pages = set()
+    for part in pages_str.split(','):
+        if '-' in part:
+            start, end = map(int, part.split('-'))
+            pages.update(range(start, end + 1))
+        else:
+            pages.add(int(part))
+    return sorted(pages)
+
 def main():
     # Set up command-line argument parsing
     parser = argparse.ArgumentParser(description='Scrape Google search results.')
     parser.add_argument('-q', '--query', type=str, required=True, help='The search query.')
-    parser.add_argument('-p', '--page', type=int, default=1, help='The page number to scrape (default: 1).')
+    parser.add_argument('-p', '--pages', type=str, default='1', help='The pages to scrape (e.g., "1,2,3" or "1-3").')
 
     args = parser.parse_args()
 
-    # Fetch results for the specified query and page
-    print("       ______  _______     ______ 1.0 ")
-    print("     .' ___  ||_   __ \  .' ____ \    ")
-    print("    / .'   \_|  | |__) | | (___ \_|   ")
-    print("    | |   ____  |  __ /   _.____`.    ")
-    print("    \ `.___]  |_| |  \ \_| \____) |   ")
-    print("     `._____.'|____| |___|\______.'   ")
-    print("       GOOGLE SEARCH SERPING TOOL     ")
+    pages = parse_pages(args.pages)
+    all_results = []
+
+    # Clear the terminal screen
+    clear()
+
+    # Print the banner once
+    print(f"   ______     ______     ______       ")
+    print(f"  /\  ___\   /\  __ \   /\  ___\      ")
+    print(f"  \ \ \__ \  \ \  __<   \ \___  \     ")
+    print(f"   \ \_____\  \ \_\ \_\  \/\_____\    ")
+    print(f"    \/_____/   \/_/\/_/   \/_____/    ")
     print()
-    print(f"Fetching results for query: {args.query} (Page {args.page})")
+    print(f"      {BGG}GOOGLE SEARCH SERPING TOOL{NE}     ")
     print()
+
+    # Display fetching message for the range or list of pages
+    if len(pages) == 1:
+        print(f"Fetching results for query: {args.query} (Page {pages[0]})")
+    else:
+        pages_str = ','.join(map(str, pages))
+        print(f"Fetching results for query: {args.query} (Pages {pages_str})")
     print('-----------------------------------------------------------------------------')
-    results = fetch_results(args.query, args.page)
-    display_results(results)
+
+    # Fetch and display results for each page
+    for page in pages:
+        results = fetch_results(args.query, page)
+        all_results.extend(results)
+
+    display_results(all_results)
 
 if __name__ == "__main__":
     main()
