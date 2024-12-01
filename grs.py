@@ -33,7 +33,7 @@ def fetch_results(query, page_number=1):
 
     # Set up headers to simulate a real browser request
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (compatible; ScoutJet; +http://www.scoutjet.com/)'
     }
 
     # Send the GET request
