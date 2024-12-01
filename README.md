@@ -9,6 +9,6 @@ git clone https://github.com/Trabbit0ne/grs.git && cd grs && chmod +x grs.py && 
 ```
 
 ## Usage
-grs --query/-q 'query' --page/-p PAGE <search>
+grs --query/-q 'query' --page/-p PAGE <search> --silent/-s
 
 grs --help/-h <Display help message>
