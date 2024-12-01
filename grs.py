@@ -55,22 +55,52 @@ def fetch_results(query, page_number=1):
     for result in results:
         a_tag = result.find_parent('a')
         if a_tag:
-            title = result.get_text()
             link = a_tag['href']
-            extracted_results.append((title, link))
+
+            # Extract the actual URL by stripping out the parameters like ?q=
+            parsed_url = urllib.parse.urlparse(link)
+            clean_link = urllib.parse.parse_qs(parsed_url.query).get('q', [None])[0]
+
+            title = result.get_text() if result else 'No title found'
+
+            if clean_link:
+                extracted_results.append((title, clean_link))
 
     return extracted_results
 
-def display_results(results):
+def display_results(results, silent_mode=False, pages=[], query=''):
     # Display extracted results
     if not results:
         print("No results found.")
         return
 
-    for idx, (title, link) in enumerate(results, 1):
-        print(f"\033[1;34m{idx}. Title: \033]8;;{link}\a{title}\033]8;;\a\033[0m")  # Clickable link with blue title
-        print(f"   Link: {link}")
+    if not silent_mode:
+        # Print the banner only if not in silent mode
+        print(f"   ______     ______     ______       ")
+        print(f"  /\  ___\   /\  __ \   /\  ___\      ")
+        print(f"  \ \ \__ \  \ \  __<   \ \___  \     ")
+        print(f"   \ \_____\  \ \_\ \_\  \/\_____\    ")
+        print(f"    \/_____/   \/_/\/_/   \/_____/    ")
+        print()
+        print(f"      {BGG}GOOGLE SEARCH SERPING TOOL{NE}     ")
+        print()
+
+        # Print fetching message for the range or list of pages
+        if len(pages) == 1:
+            print(f"Fetching results for query: {query} (Page {pages[0]})")
+        else:
+            pages_str = ','.join(map(str, pages))
+            print(f"Fetching results for query: {query} (Pages {pages_str})")
         print('-----------------------------------------------------------------------------')
+
+    for idx, (title, link) in enumerate(results, 1):
+        if silent_mode:
+            print(link)  # Only print the link in silent mode
+        else:
+            print(f"\033[1;34m{idx}. Title: {title}\033[0m")
+            print(f"   Link: \033]8;;{link}\a{link}\033]8;;\a\033[0m")  # Clickable link
+        if not silent_mode:
+            print('-----------------------------------------------------------------------------')
 
 def parse_pages(pages_str):
     pages = set()
@@ -87,6 +117,7 @@ def main():
     parser = argparse.ArgumentParser(description='Scrape Google search results.')
     parser.add_argument('-q', '--query', type=str, required=True, help='The search query.')
     parser.add_argument('-p', '--pages', type=str, default='1', help='The pages to scrape (e.g., "1,2,3" or "1-3").')
+    parser.add_argument('-s', '--silent', action='store_true', help='Enable silent mode (only show links).')
 
     args = parser.parse_args()
 
@@ -96,30 +127,13 @@ def main():
     # Clear the terminal screen
     clear()
 
-    # Print the banner once
-    print(f"   ______     ______     ______       ")
-    print(f"  /\  ___\   /\  __ \   /\  ___\      ")
-    print(f"  \ \ \__ \  \ \  __<   \ \___  \     ")
-    print(f"   \ \_____\  \ \_\ \_\  \/\_____\    ")
-    print(f"    \/_____/   \/_/\/_/   \/_____/    ")
-    print()
-    print(f"      {BGG}GOOGLE SEARCH SERPING TOOL{NE}     ")
-    print()
-
-    # Display fetching message for the range or list of pages
-    if len(pages) == 1:
-        print(f"Fetching results for query: {args.query} (Page {pages[0]})")
-    else:
-        pages_str = ','.join(map(str, pages))
-        print(f"Fetching results for query: {args.query} (Pages {pages_str})")
-    print('-----------------------------------------------------------------------------')
-
     # Fetch and display results for each page
     for page in pages:
         results = fetch_results(args.query, page)
         all_results.extend(results)
 
-    display_results(all_results)
+    # Display the results in silent mode or normal mode
+    display_results(all_results, silent_mode=args.silent, pages=pages, query=args.query)
 
 if __name__ == "__main__":
     main()
