@@ -1,5 +1,5 @@
 # GRS
-## Google Search Serping Tool
+## Google Search Results Serping Tool
 
 ![image](https://github.com/Trabbit0ne/grs/blob/main/grs.gif?raw=true)
 
